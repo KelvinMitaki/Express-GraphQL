@@ -1,22 +1,5 @@
 import { GraphQLObjectType, GraphQLSchema, GraphQLString } from "graphql";
-
-const users = [
-  {
-    id: "1",
-    firstName: "kevin",
-    age: 20
-  },
-  {
-    id: "2",
-    firstName: "brian",
-    age: 22
-  },
-  {
-    id: "3",
-    firstName: "wesley",
-    age: 26
-  }
-];
+import axios from "axios";
 
 const UserType = new GraphQLObjectType({
   name: "User",
@@ -35,8 +18,9 @@ const RootQuery = new GraphQLObjectType({
       args: {
         id: { type: GraphQLString }
       },
-      resolve(parent, args, ctx, info) {
-        return users.find(usr => usr.id === args.id);
+      async resolve(parent, args, ctx, info) {
+        const res = await axios.get(`http://localhost:3000/users/${args.id}`);
+        return res.data;
       }
     }
   }
